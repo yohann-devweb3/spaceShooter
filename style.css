@@ -1,0 +1,59 @@
+body {
+    margin :0;
+    overflow: hidden;
+}
+
+.game {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background-image: url(./images/earth.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 5;
+}
+
+.player {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background-image: url(./images/spaceship.png);
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 5;
+}
+
+.bullet {
+    position: absolute;
+    z-index: 5;
+}
+
+.ennemy{
+    position: relative;
+    background-image: url(./images/ennemy.png);
+    width: 50px;
+    height: 50px;
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 5;
+}
+
+.bullet{
+    background-color: aquamarine;
+    z-index: 5;
+}
+
+
+#sante{
+    position: absolute;
+    color: rgb(193, 86, 86);
+    top: 110px;
+    left: 40px;
+    height: 50px;
+    z-index: 10;
+    width: auto;
+    font-size: x-large;
+}
