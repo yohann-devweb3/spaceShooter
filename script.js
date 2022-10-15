@@ -16,6 +16,10 @@ var health =5;
 let playerLeft = (window.innerWidth - playerWidth) / 2;
 let PlayerTop =  (window.innerHeight - playerHeight);
 var speedEnemy = 2;
+var speedBullet=2;
+var speedShip=5;
+var enemyTimeRecast=5000;
+var endgame=false;
 
 //instances dom
 const game = document.getElementById("game");
@@ -55,7 +59,7 @@ player.style.height = playerHeight + 'px';
 
 
 
-//déplacement
+//déplacement bullet
 window.addEventListener('keydown',function(event){
     code = event.keyCode;
     press = true;
@@ -78,47 +82,67 @@ window.addEventListener('keydown',function(event){
 
 window.addEventListener('keyup',function(){
     press = false;
-})
+});
 
 function generate(){
-    const enemy = document.createElement("div");
-    enemy.style.width = ennemyWidth + 'px';
-    enemy.style.height = ennemyHeight + 'px';
-    enemy.style.left = Math.round(Math.random() * (window.innerWidth - ennemyWidth))+'px';
-    enemy.style.top = 0+'px';
-    enemy.className='ennemy';
-    game.append(enemy);
-    ennemies.push(enemy);
+    if(endgame===false){
+        const enemy = document.createElement("div");
+        enemy.style.width = ennemyWidth + 'px';
+        enemy.style.height = ennemyHeight + 'px';
+        enemy.style.left = Math.round(Math.random() * (window.innerWidth - ennemyWidth))+'px';
+        enemy.style.top = 0+'px';
+        enemy.className='ennemy';
+        game.append(enemy);
+        ennemies.push(enemy);
+    
+   
 
     //genere prochain enemy tout les 5sec
-    setTimeout(generate,Math.round(Math.random() * 5000));
+    var zetime = setTimeout(generate,Math.round(Math.random() * enemyTimeRecast));
+    }else{
+        clearInterval(zetime);
+    }
+
    
 }
+//deplacement et vitesse de deplacement
+function strafe(speed){
+    speed=parseInt(speed);
 
-generate();
-
-function draw(){
-
-    
     if (press && code == 39 && playerLeft<= window.innerWidth - playerWidth){
-        playerLeft = playerLeft+5;
+        playerLeft = playerLeft+speed;
     }
 
     if (press && code == 37 && playerLeft>=0){
-        playerLeft = playerLeft-5;
+        playerLeft = playerLeft-speed;
     }
 
     if (press && code == 38 && PlayerTop >=0){
-        PlayerTop = PlayerTop-5;
+        PlayerTop = PlayerTop-speed;
     }
 
     if (press && code == 40 && PlayerTop<= window.innerHeight - playerHeight){
-        PlayerTop = PlayerTop+5;
+        PlayerTop = PlayerTop+speed;
     }
 
+    
     //set la position
     player.style.top = PlayerTop + 'px';
     player.style.left = playerLeft + 'px';
+   
+}
+
+
+    generate(enemyTimeRecast);
+
+
+
+
+function draw(){
+
+    strafe(speedShip);
+
+  
 
     //draw enemies
     for (let index = 0; index<ennemies.length;index++){
@@ -131,10 +155,18 @@ function draw(){
         }
     }
 
+ 
+
+
+   
+    
+    //draw bullets
     for (let index = 0; index<bullets.length;index++){
         const bullet = bullets[index];
-        bullet.style.top = (parseInt(bullet.style.top)-2)+'px';
-        
+  
+        bullet.style.top =(parseInt(bullet.style.top))-speedBullet+'px';
+     
+    
         if(parseInt(bullet.style.top)<0){
             game.removeChild(bullet);
             bullets.splice(index,1);
@@ -162,18 +194,45 @@ function draw(){
                 //augmente la vitesse si j'ai atteind un certain nombre de points
 
                 if (pointScore==2){
+                   
                     speedEnemy=speedEnemy+2;
+                    speedBullet=speedBullet+2;
+
+                    speedShip=speedShip+2;
+                    strafe(speedShip);
+                    enemyTimeRecast=4500;
                 }
 
                 if (pointScore==4){
+                    
                     speedEnemy=speedEnemy+2;
+                    speedBullet=speedBullet+2;
+
+                    speedShip=speedShip+2;
+                    strafe(speedShip);
+                    enemyTimeRecast=3500;
                 }
 
                 if (pointScore==6){
                     speedEnemy=speedEnemy+2;
+                    speedBullet=speedBullet+2;
+                   
+                    speedShip=speedShip+2;
+                    strafe(speedShip);
+                    enemyTimeRecast=2800;
                 }
                
-
+                if (pointScore==10){
+                    speedEnemy=speedEnemy+2;
+                    speedBullet=speedBullet+2;
+                    
+                    speedShip=speedShip+2;
+                    strafe(speedShip);
+                    enemyTimeRecast=1000;
+                  
+                }
+               
+                console.log(enemyTimeRecast+"-----");
                 document.getElementById("score").innerText="Mon score: " +pointScore ;
                 }   
                            
@@ -201,6 +260,7 @@ function draw(){
                     if(pointSante==0){ //dans le cas ou il a plus de point de vie
                       
                        //set game over
+                        endgame=true;
                         const gameover = document.createElement('div');
                         const msg = document.createElement('h1');
                         gameover.id = "gameover";
@@ -213,18 +273,19 @@ function draw(){
                         gameover.style.backgroundColor="black";
 
                         msg.style.position="absolute";
-                        msg.style.top="50%";
-                        msg.style.left="45%";
+                        msg.style.top="31%";
+                        msg.style.left="32%";
                         msg.style.font="red";
                         msg.style.zIndex="25";
                         msg.style.height="500px";
                         msg.textContent="Game Over !";
                         msg.style.color="red";
+                        msg.style.fontSize="84px";
 
                         document.body.insertBefore(msg,document.body.firstChild);
                         document.body.insertBefore(gameover,document.body.firstChild);
 
-                          //set game over
+                          //set button replay
                           const replay = document.createElement('button');
                           replay.id="buttonReplay";
                           replay.style.backgroundColor="yellow";
@@ -233,7 +294,7 @@ function draw(){
                           replay.style.position="absolute";
                           replay.style.top="59%";
                           replay.style.fontSize="xxx-large";
-                          replay.style.left="47%";
+                          replay.style.left="44%";
                           replay.style.border="1px solid blue";
                           replay.style.borderRadius="5px"
                           replay.textContent="Rejouer";
