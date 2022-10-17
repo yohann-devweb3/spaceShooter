@@ -76,7 +76,26 @@ window.addEventListener('keydown',function(event){
         bullets.push(bullet);
     }
 
-    
+   //droite
+   if (press && code == 39 && playerLeft<= window.innerWidth - playerWidth){
+    playerLeft = playerLeft+speed;
+}
+
+
+//gauche
+if (press && code == 37 && playerLeft>=0){
+    playerLeft = playerLeft-speed;
+}
+
+//haut
+if (press && code == 38 && PlayerTop >=0){
+    PlayerTop = PlayerTop-speed;
+}
+
+//bas
+if (press && code == 40 && PlayerTop<= window.innerHeight - playerHeight){
+    PlayerTop = PlayerTop+speed;
+}
 },true);
 
 
@@ -109,22 +128,26 @@ function generate(){
 function strafe(speed){
     speed=parseInt(speed);
 
+    //droite
     if (press && code == 39 && playerLeft<= window.innerWidth - playerWidth){
         playerLeft = playerLeft+speed;
     }
 
+
+    //gauche
     if (press && code == 37 && playerLeft>=0){
         playerLeft = playerLeft-speed;
     }
 
+    //haut
     if (press && code == 38 && PlayerTop >=0){
         PlayerTop = PlayerTop-speed;
     }
 
+    //bas
     if (press && code == 40 && PlayerTop<= window.innerHeight - playerHeight){
         PlayerTop = PlayerTop+speed;
     }
-
     
     //set la position
     player.style.top = PlayerTop + 'px';
