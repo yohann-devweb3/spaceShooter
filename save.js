@@ -4,8 +4,6 @@ let press = null;
 let code = null;
 const bullets = [];
 const ennemies = [];
-const hearts = [];
-const earths = [];
 const bulletWidth = 4;
 const bulletHeight = 4;
 const ennemyWidth = 25;
@@ -86,9 +84,7 @@ window.addEventListener('keyup',function(){
     press = false;
 });
 
-
-// generate enemy
-function generateEnemy(){
+function generate(){
     if(endgame===false){
         const enemy = document.createElement("div");
         enemy.style.width = ennemyWidth + 'px';
@@ -102,35 +98,13 @@ function generateEnemy(){
    
 
     //genere prochain enemy tout les 5sec
-    var zetime = setTimeout(generateEnemy,Math.round(Math.random() * enemyTimeRecast));
+    var zetime = setTimeout(generate,Math.round(Math.random() * enemyTimeRecast));
     }else{
         clearInterval(zetime);
     }
- 
-}
 
-// generate hearts
-function generateHeart(){
-    if(endgame===false){
-        const heart = document.createElement("div");
-        heart.style.width = ennemyWidth + 'px';
-        heart.style.height = ennemyHeight + 'px';
-        heart.style.left = Math.round(Math.random() * (window.innerWidth - ennemyWidth))+'px';
-        heart.style.top = 0+'px';
-        heart.className='heart';
-        game.append(heart);
-        hearts.push(heart);
-    
    
-
-    //genere prochain enemy tout les 5sec
-    var zetime2 = setTimeout(generateHeart,Math.round(Math.random() * 28000));
-    }else{
-        clearInterval(zetime2);
-    }
- 
 }
-
 //deplacement et vitesse de deplacement
 function strafe(speed){
     speed=parseInt(speed);
@@ -159,8 +133,8 @@ function strafe(speed){
 }
 
 
-generateEnemy();
-generateHeart();
+    generate(enemyTimeRecast);
+
 
 
 
@@ -169,17 +143,6 @@ function draw(){
     strafe(speedShip);
 
   
-  
-        //draw earth
-        for (let index = 0; index<earths.length;index++){
-            const earth = earths[index];
-            earth.style.top = (parseInt(earth.style.top)+speedEnemy)+'px';
-            
-            if(parseInt(earth.style.top)>window.innerHeight-ennemyHeight){
-                game.removeChild(earth);
-                earths.splice(index,1);
-            }
-        }
 
     //draw enemies
     for (let index = 0; index<ennemies.length;index++){
@@ -192,16 +155,7 @@ function draw(){
         }
     }
 
-     //draw hearts
-     for (let index = 0; index<hearts.length;index++){
-        const heart = hearts[index];
-        heart.style.top = (parseInt(heart.style.top)+speedEnemy)+'px';
-        
-        if(parseInt(heart.style.top)>window.innerHeight-ennemyHeight){
-            game.removeChild(heart);
-            hearts.splice(index,1);
-        }
-    }
+ 
 
 
    
@@ -277,16 +231,6 @@ function draw(){
                     enemyTimeRecast=1000;
                   
                 }
-
-                if (pointScore==13){
-                    speedEnemy=speedEnemy+2;
-                    speedBullet=speedBullet+2;
-                    
-                    speedShip=speedShip+2;
-                    strafe(speedShip);
-                    enemyTimeRecast=1000;
-                  
-                }
                
                 console.log(enemyTimeRecast+"-----");
                 document.getElementById("score").innerText="Mon score: " +pointScore ;
@@ -294,7 +238,7 @@ function draw(){
                            
              }
     }
-        //collision detection vaisseaux et player et decrement la vie
+        //collision detection vaiseaux et player et decrement la vie
         for (let i =0;i<ennemies.length;i++){
             const ennemy = ennemies[i];
        
@@ -370,32 +314,7 @@ function draw(){
                             
                 
         }
-         //collision detection hearts et player et increment la vie
-         for (let i =0;i<hearts.length;i++){
-            const heart = hearts[i];
-       
-            
-                    if(player.offsetLeft+(player.clientWidth/2)> heart.offsetLeft
-                    && player.offsetLeft+(player.clientWidth/2)<heart.offsetLeft + heart.clientWidth
-                    && player.offsetTop+(player.clientHeight/2)>heart.offsetTop
-                    && player.offsetTop+(player.clientHeight/2)<heart.offsetTop + heart.clientWidth){
-                    game.removeChild(heart);
-                    hearts.splice(i,1);
 
-                 
-
-                    pointSante=pointSante+1;
-
-
-                    document.getElementById("sante").innerText="Points de vie: " +pointSante ;
-
-                   
-                    
-
-                    }   
-                            
-                
-        }
     requestAnimationFrame(draw);
 }
 
